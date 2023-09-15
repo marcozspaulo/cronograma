@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cronograma</title>
+  <title>Cronograma</title>  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -69,32 +69,37 @@
       font-weight: bold;
       color: #066a75;
     }
+
   </style>
+
 </head>
 <body>
   <h1>Cronograma</h1>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <input type="button" id="btnExport" value=" Exportar para Excel" />
+  <div id="exExcell">
   <table id="cronograma">
     <tr>
       <th>Segunda-feira</th>
-      <th>Feito</th>
-      <th>Horário</th>
-      <th>Terça-feira</th>
-      <th>Feito</th>
-      <th>Horário</th>
-      <th>Quarta-feira</th>
-      <th>Feito</th>
-      <th>Horário</th>
-      <th>Quinta-feira</th>
-      <th>Feito</th>
-      <th>Horário</th>
-      <th>Sexta-feira</th>
-      <th>Feito</th>
-      <th>Horário</th>
-      <th>Ações</th>
+    <th>Feito</th>
+    <th>Horário</th>
+    <th>Terça-feira</th>
+    <th>Feito</th>
+    <th>Horário</th>
+    <th>Quarta-feira</th>
+    <th>Feito</th>
+    <th>Horário</th>
+    <th>Quinta-feira</th>
+    <th>Feito</th>
+    <th>Horário</th>
+    <th>Sexta-feira</th>
+    <th>Feito</th>
+    <th>Horário</th>
+    <th>Ações</th>
     </tr>
   </table>
-
+  
+</div>
   <form id="formulario">
     <input type="text" id="segundaInput" required placeholder="Digite a tarefa">
     <input type="checkbox" id="segundaFeito" disabled>
@@ -146,7 +151,7 @@
 
         var colunaSegundaFeito = linha.insertCell(1);
         colunaSegundaFeito.innerHTML = "<input type='checkbox' " + (dadosCronograma[i].segundaFeito ? "checked" : "") + " onchange='atualizarHorarioSegunda(this)'>";
-          
+        
         var colunaHorario = linha.insertCell(2);
         colunaHorario.innerHTML = "<span class='horario'>" + dadosCronograma[i].horarioSegunda + "</span>";
         
@@ -298,65 +303,61 @@
     }
     //Edita a tarefa
     function editarTarefa(id, coluna) {
-      var linha = document.getElementById("linha-" + id);
-      var colunaSelecionada = linha.cells[coluna];
+              var linha = document.getElementById("linha-" + id);
+              var colunaSelecionada = linha.cells[coluna];
 
-      var valorAntigo = colunaSelecionada.innerHTML;
+              var valorAntigo = colunaSelecionada.textContent;
 
-      var input = document.createElement("input");
-      input.type = "text";
-      input.value = valorAntigo;
-      input.className = "edit-input";
-      input.onblur = function() {
-        salvarEdicao(id, coluna, this.value);
-      };
+              var input = document.createElement("input");
+              input.type = "text";
+              input.value = valorAntigo;
+              input.className = "edit-input";
+              input.onblur = function() {
+                salvarEdicao(id, coluna, this.value);
+              };
 
+              colunaSelecionada.innerHTML = "";
+              colunaSelecionada.appendChild(input);
+              input.focus();
 
-      colunaSelecionada.innerHTML = "";
-      colunaSelecionada.appendChild(input);
-      input.focus();
+              salvarDadosNoLocalStorage();
+            }
 
-      salvarDadosNoLocalStorage();
-    }
 
     
     //Salva a funcao na coluna da semana
     function salvarEdicao(id, coluna, novoValor) {
-      var linha = document.getElementById("linha-" + id);
-      var colunaSelecionada = linha.cells[coluna];
+            var linha = document.getElementById("linha-" + id);
+            var colunaSelecionada = linha.cells[coluna];
 
-      colunaSelecionada.innerHTML = novoValor;
-      colunaSelecionada.onclick = function() {
-        editarTarefa(id, coluna);
-      };
+            colunaSelecionada.textContent = novoValor;
 
-      var tarefa = dadosCronograma.find(function(item) {
-        return item.id === id;
-      });
+            var tarefa = dadosCronograma.find(function(item) {
+              return item.id === id;
+            });
 
-      if (tarefa) {
-        switch (coluna) {
-          case 0:
-            tarefa.segunda = novoValor;
-            break;
-          case 3:
-            tarefa.terca = novoValor;
-            break;
-          case 6:
-            tarefa.quarta = novoValor;
-            break;
-          case 9:
-            tarefa.quinta = novoValor;
-            break;
-          case 12:
-            tarefa.sexta = novoValor;
-            break;
-          case 15:
-            tarefa.horario = novoValor;
-            break;
-        }
-      }
-    }
+            if (tarefa) {
+              switch (coluna) {
+                case 0:
+                  tarefa.segunda = novoValor;
+                  break;
+                case 3:
+                  tarefa.terca = novoValor;
+                  break;
+                case 6:
+                  tarefa.quarta = novoValor;
+                  break;
+                case 9:
+                  tarefa.quinta = novoValor;
+                  break;
+                case 12:
+                  tarefa.sexta = novoValor;
+                  break;
+              }
+              salvarDadosNoLocalStorage(); // Salvar as edições no localStorage
+            }
+          }
+
     //Exclui a linha clicando em "EXCLUIR"
     function excluirTarefa(id) {
       var linha = document.getElementById("linha-" + id);
@@ -524,8 +525,24 @@ function padZeroLeft(valor) {
    
 
     //window.location.href = "pagina_colab.html?cronograma=" + JSON.stringify(dadosCronograma);
-
-
+    function ExportToExcel() {
+            var htmltable = document.getElementById('exportdata');
+            var html = htmltable.outerHTML;
+            window.open('data:application/vnd.ms-excel, ' + encodeURIComponent(html));
+        }
+        $(document).ready(function () {
+     $("#btnExport").click(function (e) {
+          e.preventDefault();
+          var table_div = document.getElementById('exExcell');   
+          // esse "\ufeff" é importante para manter os acentos         
+          var blobData = new Blob(['\ufeff'+table_div.outerHTML], { type: 'application/vnd.ms-excel' });
+          var url = window.URL.createObjectURL(blobData);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'Meu arquivo Excel'
+                a.click();
+            });
+        });
   </script>
 </body>
 </html>
