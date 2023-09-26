@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <style>
+    @media (max-width: 768px) {
+  body {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  h1 {
+    font-size: 36px;
+  }
+  
+  form {
+    width: 90%;
+    padding: 10px;
+  }
+}
     body {
       background-color: #f0f0f0;
+      background-image: url('https://www.brembo.com/en/_catalogs/masterpage/brembo/images/logo.svg');
+      background-size: 100%; 
+      background-position: 90%;
+      background-repeat: no-repeat; 
+      background-attachment: fixed; 
     }
 
     h1 {
@@ -77,7 +98,7 @@
 
   </style>
 </head>
-<body>
+  
   <h1>Login</h1>
 
   <form id="loginForm">
@@ -95,7 +116,7 @@
     <input type="radio" name="tipo" value="admin">Admin
     <input type="radio" name="tipo" value="colaborador">Colaborador
   </div>
-  
+  </body>
 
 
   <script>
@@ -140,5 +161,4 @@
   </script>
 
 
-</body>
 </html>
