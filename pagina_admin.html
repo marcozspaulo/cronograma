@@ -1,12 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+
   <title>Cronograma</title>  
   <style>
+    /*Estilo para celulares*/
+    @media (max-width: 768px) {
+  body {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  h1 {
+    font-size: 36px;
+  }
+  
+  form {
+    width: 90%;
+    padding: 10px;
+  }
+}
     body {
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
+      background-image: url('https://www.brembo.com/en/_catalogs/masterpage/brembo/images/logo.svg');
+      background-size: 25%; 
+      background-position:top[];
+ 
+      background-repeat: no-repeat; 
     }
+    
 
     h1 {
       text-align: center;
@@ -48,7 +73,7 @@
       margin-right: 10px;
     }
 
-    button[type="submit"] {
+    button[type="submit"]{
       cursor: pointer;
       background-color: #3d9db3;
       padding: 10px 20px;
@@ -69,9 +94,10 @@
       font-weight: bold;
       color: #066a75;
     }
+   
 
   </style>
-
+  </body>
 </head>
 <body>
   <h1>Cronograma</h1>
@@ -103,7 +129,7 @@
   <form id="formulario">
     <input type="text" id="segundaInput" required placeholder="Digite a tarefa">
     <input type="checkbox" id="segundaFeito" disabled>
-    <input type="text" id="tercaInput" required placeholder="Digite a tarefa">
+  <input type="text" id="tercaInput" required placeholder="Digite a tarefa">
     <input type="checkbox" id="tercaFeito" disabled>
     <input type="text" id="quartaInput" required placeholder="Digite a tarefa">
     <input type="checkbox" id="quartaFeito" disabled>
@@ -302,61 +328,81 @@
 
     }
     //Edita a tarefa
-    function editarTarefa(id, coluna) {
-              var linha = document.getElementById("linha-" + id);
-              var colunaSelecionada = linha.cells[coluna];
+    function editarTarefa(id) {
+        var linha = document.getElementById("linha-" + id);
+        var formulario = document.getElementById("formulario");
 
-              var valorAntigo = colunaSelecionada.textContent;
+         // Armazene a linha atualmente editada
+        linhaEditada = linha;
 
-              var input = document.createElement("input");
-              input.type = "text";
-              input.value = valorAntigo;
-              input.className = "edit-input";
-              input.onblur = function() {
-                salvarEdicao(id, coluna, this.value);
-              };
+        // Obtenha os valores da linha selecionada
+        var segundaTarefa = linha.cells[0].textContent;
+        var tercaTarefa = linha.cells[3].textContent;
+        var quartaTarefa = linha.cells[6].textContent;
+        var quintaTarefa = linha.cells[9].textContent;
+        var sextaTarefa = linha.cells[12].textContent;
 
-              colunaSelecionada.innerHTML = "";
-              colunaSelecionada.appendChild(input);
-              input.focus();
+        // Preencha o formulário com os valores da linha
+        formulario.elements["segundaInput"].value = segundaTarefa;
+        formulario.elements["tercaInput"].value = tercaTarefa;
+        formulario.elements["quartaInput"].value = quartaTarefa;
+        formulario.elements["quintaInput"].value = quintaTarefa;
+        formulario.elements["sextaInput"].value = sextaTarefa;
+        
 
-              salvarDadosNoLocalStorage();
-            }
+        // Adicione um botão "Salvar" ao formulário
+        var botaoSalvar = document.createElement("button");
+        botaoSalvar.textContent = "Salvar";
+        botaoSalvar.onclick = function() {
+
+          
+          salvarEdicao(id);
+        };
+
+        // Remova o botão "Editar" do formulário
+        formulario.removeChild(formulario.querySelector("button[type='submit']"));
+
+        // Adicione o botão "Salvar" ao formulário
+        formulario.appendChild(botaoSalvar);
+
+        function salvarEdicao(id) {
+          if (linhaEditada) {
+            var linha = linhaEditada;
+            var formulario = document.getElementById("formulario");
+
+            var segundaTarefa = formulario.elements["segundaInput"].value;
+            var tercaTarefa = formulario.elements["tercaInput"].value;
+            var quartaTarefa= formulario.elements["quartaInput"].value;
+            var quintaTarefa = formulario.elements["quintaInput"].value;
+            var sextaTarefa = formulario.elements["sextaInput"].value;
+            
+            // Atualize as informações da linha existente
+            linha.cells[0].textContent = segundaTarefa;
+            linha.cells[3].textContent = tercaTarefa;
+            linha.cells[6].textContent = quartaTarefa ;
+            linha.cells[9].textContent = quintaTarefa;
+            linha.cells[12].textContent = sextaTarefa;
 
 
-    
-    //Salva a funcao na coluna da semana
-    function salvarEdicao(id, coluna, novoValor) {
-            var linha = document.getElementById("linha-" + id);
-            var colunaSelecionada = linha.cells[coluna];
+            // Remova o botão "Salvar" do formulário e adicione o botão "Adicionar Tarefa"
+            formulario.removeChild(formulario.querySelector("button"));
+            var botaoAdicionar = document.createElement("button");
+            botaoAdicionar.type = "submit";
+            botaoAdicionar.textContent = "Adicionar Tarefa";
+            formulario.appendChild(botaoAdicionar);
 
-            colunaSelecionada.textContent = novoValor;
-
-            var tarefa = dadosCronograma.find(function(item) {
-              return item.id === id;
-            });
-
-            if (tarefa) {
-              switch (coluna) {
-                case 0:
-                  tarefa.segunda = novoValor;
-                  break;
-                case 3:
-                  tarefa.terca = novoValor;
-                  break;
-                case 6:
-                  tarefa.quarta = novoValor;
-                  break;
-                case 9:
-                  tarefa.quinta = novoValor;
-                  break;
-                case 12:
-                  tarefa.sexta = novoValor;
-                  break;
-              }
-              salvarDadosNoLocalStorage(); // Salvar as edições no localStorage
-            }
+            // Limpe a variável global de linha editada
+            linhaEditada = null;
           }
+           // Limpe os campos do formulário
+            formulario.elements["segundaInput"].value = "";
+            formulario.elements["tercaInput"].value = "";
+            formulario.elements["quartaInput"].value = "";
+            formulario.elements["quintaInput"].value = "";
+            formulario.elements["sextaInput"].value = "";
+        }
+      }
+
 
     //Exclui a linha clicando em "EXCLUIR"
     function excluirTarefa(id) {
@@ -544,6 +590,8 @@ function padZeroLeft(valor) {
                 a.click();
             });
         });
+
+        
   </script>
 </body>
 </html>
