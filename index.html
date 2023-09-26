@@ -136,6 +136,15 @@
       var password = passwordInput.value;
       var userTypeInput = userTypeInput ? userTypeInput.value : null;
 
+      if (userTypeInput === "admin" && username === "teste" && password === "1") {
+        usernameInput.value = "";
+        passwordInput.value = "";
+
+        // Redirecionar para o pagina do admin
+        window.location.href = "pagina_admin.html";
+
+        // Verificar as credencias do colaborador
+      }
       // Verificar as credenciais do admin
       if (userTypeInput === "admin" && username === "admin" && password === "@brembo123") {
         usernameInput.value = "";
