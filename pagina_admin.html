@@ -525,6 +525,8 @@ function padZeroLeft(valor) {
    
 
     //window.location.href = "pagina_colab.html?cronograma=" + JSON.stringify(dadosCronograma);
+
+    //realizar a exportação em Excel
     function ExportToExcel() {
             var htmltable = document.getElementById('exportdata');
             var html = htmltable.outerHTML;
@@ -533,8 +535,7 @@ function padZeroLeft(valor) {
         $(document).ready(function () {
      $("#btnExport").click(function (e) {
           e.preventDefault();
-          var table_div = document.getElementById('exExcell');   
-          // esse "\ufeff" é importante para manter os acentos         
+          var table_div = document.getElementById('exExcell');            
           var blobData = new Blob(['\ufeff'+table_div.outerHTML], { type: 'application/vnd.ms-excel' });
           var url = window.URL.createObjectURL(blobData);
           var a = document.createElement('a');
