@@ -1,173 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html>
+
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <style>
-    @media (max-width: 768px) {
-  body {
-    background-size: cover;
-    background-position: center;
-  }
-  
-  h1 {
-    font-size: 36px;
-  }
-  
-  form {
-    width: 90%;
-    padding: 10px;
-  }
-}
-    body {
-      background-color: #f0f0f0;
-      background-image: url('https://www.brembo.com/en/_catalogs/masterpage/brembo/images/logo.svg');
-      background-size: 100%; 
-      background-position: 90%;
-      background-repeat: no-repeat; 
-      background-attachment: fixed; 
-    }
-
-    h1 {
-      font-size: 50px;
-      color: #066a75;
-      font-family: Arial, sans-serif;
-      font-weight: bold;
-      text-align: center;
-      padding: 20px 0;
-      border-bottom: 2px solid #066a75;
-    }
-
-    form {
-      width: 300px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 1px solid #b2b2b2;
-      border-radius: 5px;
-      background-color: #fff;
-      box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6);
-    }
-
-    label {
-      display: block;
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 8px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      width: 95%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button, [type="submit"] {
-      width: 100%;
-      cursor: pointer;
-      background-color: #3d9db3;
-      padding: 10px 0;
-      color: #fff;
-      font-size: 20px;
-      border: none;
-      border-radius: 5px;
-      margin-top: 20px;
-      text-shadow: 0 1px 1px #333;
-      transition: background-color 0.2s ease;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #3697a9;
-    }
-
-    button[type="submit"]:focus {
-      outline: none;
-    }
-
-    .error-message {
-      color: red;
-      margin-top: 10px;
-    }
-    .radio-container {
-  display: flex;
-  justify-content: center;
-  margin-top: -25px; 
-}
-
-  </style>
+    <title>Login</title>
 </head>
-  
-  <h1>Login</h1>
 
-  <form id="loginForm">
-    <label for="username">Usuário:</label>
-    <input type="text" id="username" required>
+<body >
 
-    <label for="password">Senha:</label>
-    <input type="password" id="password" required>
+    <form>
+        <div>
+            <div><label class="caracter">Email</label></div>
+            <input type="email" name="email" id="email" placeholder="seu@email.com" onchange="onChangeEmail()"/>
+            <div class="error" id="email-required-error">Email é obrigatório</div>
+            <div class="error" id="email-invalid-error">Email é inválido</div>
+        <div>
+            <div><label class="caracter">Senha</label></div>
+            <input type="password" name="password" id="password" placeholder="Senha" onchange="onChangePassword()"/>
+            <div class="error" id="password-required-error">Senha é obrigatória</div>
+        </div>
+        <div>
+            <button type="button" class="clear" id="recover-password-button" disabled="true" onclick="recoverPassword()">Recuperar senha</button>
+        </div>
+        <div>
+            <button type="button" class="solid" id="login-button" disabled="true" onclick="login()">Entrar</button>
+        </div>
+        <div>
+            <button type="button" class="outline" onclick="register()">Registrar</button>
 
-    <button type="submit">Entrar</button>
+        </div>
+    </form>
+        
+   
 
-    <p class="error-message" id="errorText"></p>
-  </form>
-  <div class="radio-container">
-    <input type="radio" name="tipo" value="admin">Admin
-    <input type="radio" name="tipo" value="colaborador" checked>Colaborador
+
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="global.css">
+
+<script src="index.js"></script>
+<script src="loading.js"></script>
+<script src="validations.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="firebase-init.js"></script>
+
+
+<div>
+
   </div>
-  </body>
-
-
-  <script>
-    var loginForm = document.getElementById("loginForm");
-    var errorText = document.getElementById("errorText");
-
-    loginForm.addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      var usernameInput = document.getElementById("username");
-      var passwordInput = document.getElementById("password");
-      var userTypeInput = document.querySelector('input[name="tipo"]:checked');
-
-      
-
-      var username = usernameInput.value.toUpperCase();
-      var password = passwordInput.value;
-      var userTypeInput = userTypeInput ? userTypeInput.value : null;
-
-      if (userTypeInput === "admin" && username === "TESTE" && password === "1") {
-        usernameInput.value = "";
-        passwordInput.value = "";
-
-        // Redirecionar para o pagina do admin
-        window.location.href = "pagina_admin.html";
-
-        // Verificar as credencias do colaborador
-      }
-      // Verificar as credenciais do admin
-      if (userTypeInput === "admin" && username === "ADMIN" && password === "@brembo123") {
-        usernameInput.value = "";
-        passwordInput.value = "";
-
-        // Redirecionar para o pagina do admin
-        window.location.href = "pagina_admin.html";
-
-        // Verificar as credencias do colaborador
-      } else if(userTypeInput === "colaborador" && username === "COLAB" && password === "1"){
-        userTypeInput.value = "";
-        passwordInput.value = "";
-
-        // Redireciona para pagina do colaborador
-        window.location.href = "pagina_colab.html";
-      } else {
-        errorText.textContent = "Credenciais inválidas. Tente novamente.";
-        usernameInput.value = "";
-        passwordInput.value = "";
-        usernameInput.focus();
-      }
-    });
-  </script>
-
-
 </html>
